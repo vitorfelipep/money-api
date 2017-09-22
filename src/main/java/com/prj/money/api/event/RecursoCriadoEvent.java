@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationEvent;
 
+
+
 public class RecursoCriadoEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = 6880554155955816424L;

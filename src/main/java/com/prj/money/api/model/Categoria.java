@@ -12,8 +12,12 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name="categoria")
+@Getter @Setter
 public class Categoria implements Serializable{
 
 	private static final long serialVersionUID = 112224L;
@@ -30,22 +34,6 @@ public class Categoria implements Serializable{
 	public Categoria() {
 	}
 	
-	public Long getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(Long codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
