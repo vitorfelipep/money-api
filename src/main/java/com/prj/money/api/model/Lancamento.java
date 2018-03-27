@@ -46,14 +46,18 @@ public class Lancamento implements Serializable {
 	private BigDecimal valor;
 	
 	private String observacao;
+	
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tipo")
 	private TipoLancamento tipoLancamento;
-
+	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	private Categoria categoria;
-
+	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;

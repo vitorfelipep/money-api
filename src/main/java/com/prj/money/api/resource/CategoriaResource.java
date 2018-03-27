@@ -30,6 +30,8 @@ public class CategoriaResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
+	//Não funciona no Spring security e no o AUTH2
+	//@CrossOrigin(maxAge = 10, origins = { "http://localhost:8000" })
 	@GetMapping
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
