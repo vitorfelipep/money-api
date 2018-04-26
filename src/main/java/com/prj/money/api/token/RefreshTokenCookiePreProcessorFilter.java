@@ -21,25 +21,28 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RefreshTokenCookiePreProcessorFilter implements Filter{
-
-
+	
+	private final static String URL_OAUTH_TOKEN = "/oauth/token";
+	private final static String REFRESH_TOKEN = "refresh_token";
+	private final static String COOKIE = "refreshToken";
+	private final static String GRANT_TYPE = "grant_type";
+	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		
-		if("/oauth/token".equalsIgnoreCase(req.getRequestURI())
-				&& "refresh_token".equalsIgnoreCase(req.getParameter("grant_type"))
+		if(URL_OAUTH_TOKEN.equalsIgnoreCase(req.getRequestURI())
+				&& REFRESH_TOKEN.equalsIgnoreCase(req.getParameter(GRANT_TYPE))
 				&& req.getCookies() != null) {
 			for(Cookie cookie : req.getCookies()) {
-				if(cookie.getName().equals("refreshToken")) {
+				if(cookie.getName().equals(COOKIE)) {
 					String refreshToken = cookie.getValue();
 					req = new MyServletRequestWrapper(req, refreshToken);
 					
 				}
 			}
 		}
-		
 		chain.doFilter(req, response);
 	}
 
@@ -65,7 +68,7 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter{
 		@Override
 		public Map<String, String[]> getParameterMap() {
 			ParameterMap<String, String[]> map = new ParameterMap<>(getRequest().getParameterMap());
-			map.put("refresh_token", new String[] { refreshToken }); 
+			map.put(REFRESH_TOKEN, new String[] { refreshToken }); 
 			map.setLocked(true);
 			return map;
 		}

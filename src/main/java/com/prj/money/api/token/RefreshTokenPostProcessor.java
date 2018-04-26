@@ -18,10 +18,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken>{
-
+	
+	private final static String URL_OAUTH_TOKEN = "/oauth/token";
+	private final static String REFRESH_TOKEN = "refreshToken";
+	private final static String POST_ACESS_PROCESSOR = "postAccessToken";
+	
+	
 	@Override
 	public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-		return returnType.getMethod().getName().equals("postAccessToken");
+		return returnType.getMethod().getName().equals(POST_ACESS_PROCESSOR);
 	}
 
 	@Override
@@ -43,10 +48,10 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 	}
 
 	private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
-		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		Cookie refreshTokenCookie = new Cookie(REFRESH_TOKEN, refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(false); //TODO: Mudar para true em produção
-		refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");
+		refreshTokenCookie.setPath(req.getContextPath() + URL_OAUTH_TOKEN);
 		refreshTokenCookie.setMaxAge(2592000);
 		resp.addCookie(refreshTokenCookie);
 	}
