@@ -4,6 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -16,12 +17,17 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import com.prj.money.api.config.property.MoneyApiProperty;
+
 @ControllerAdvice
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken>{
 	
 	private final static String URL_OAUTH_TOKEN = "/oauth/token";
 	private final static String REFRESH_TOKEN = "refreshToken";
 	private final static String POST_ACESS_PROCESSOR = "postAccessToken";
+	
+	@Autowired
+	private MoneyApiProperty moneyApiPropertie;
 	
 	
 	@Override
@@ -50,7 +56,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 	private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
 		Cookie refreshTokenCookie = new Cookie(REFRESH_TOKEN, refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(false); //TODO: Mudar para true em produção
+		refreshTokenCookie.setSecure(moneyApiPropertie.getSecurity().isEnableHttps()); 
 		refreshTokenCookie.setPath(req.getContextPath() + URL_OAUTH_TOKEN);
 		refreshTokenCookie.setMaxAge(2592000);
 		resp.addCookie(refreshTokenCookie);
